@@ -6,7 +6,7 @@ import SearchIcon from '@mui/icons-material/Search';
 function Form() {
 
     return (
-        <div className='flex flex-col justify-center w-1/2 gap-2'>
+        <div className='flex flex-col justify-center md:w-1/2 gap-2'>
 
             <TextField id="outlined-basic" label="URL de la vidéo" variant="outlined" />
 

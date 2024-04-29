@@ -16,7 +16,8 @@ function Thumbnail() {
     const [videoDetails, setVideoDetails] = useState({});
     const [styles, setStyles] = useState({
         videoThumbnail: {
-            width: '400px',
+            maxWidth: '400px',
+            minWidth: '300px',
             border: '1px solid #ddd',
             borderRadius: '4px',
             overflow: 'hidden',
@@ -55,7 +56,7 @@ function Thumbnail() {
             display: 'flex',
             alignItems: 'center',
             gap: '8px',
-            padding: '10px'
+            padding: '0px 10px 10px 10px'
         },
         bottomLeftElement: { // Style pour l'élément en bas à gauche
             position: 'absolute',
