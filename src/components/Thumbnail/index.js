@@ -1,46 +1,17 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { getVideoDetails } from '../../services/GetVideoDetailsService';
 import Button from '@mui/material/Button';
-import html2canvas from 'html2canvas';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import { downloadImage } from '../../services/DownloadImageService';
+import DownloadIcon from '@mui/icons-material/Download';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 
 function Thumbnail() {
 
-    const monElementRef = useRef(null);
+    const downloadImageDiv = () => downloadImage(cardRef, videoDetails.thumbnailUrl, videoDetails.profilePictureUrl);
 
-    const telechargerImage = () => {
-        // URL du serveur proxy que vous avez créé
-        const proxyUrl = 'http://localhost:5000/proxy';
-
-        // Obtenir les éléments img dans le composant
-        const imageElements = monElementRef.current.querySelectorAll('img');
-
-        // Construire les URL complètes avec le serveur proxy pour chaque image
-        const thumbnailImageUrl = `${proxyUrl}?image_url=${encodeURIComponent(videoDetails.thumbnailUrl)}`;
-        const profileImageUrl = `${proxyUrl}?image_url=${encodeURIComponent(videoDetails.profilePictureUrl)}`;
-
-        // Modifier les éléments img pour utiliser les URL du proxy
-        imageElements[0].src = thumbnailImageUrl;
-        imageElements[1].src = profileImageUrl;
-
-        // Attendre que les deux images soient chargées avant de capturer le canvas
-        Promise.all(Array.from(imageElements).map(img => new Promise(resolve => {
-            img.onload = resolve;
-        }))).then(() => {
-            html2canvas(monElementRef.current, {
-                useCORS: true,
-                allowTaint: false
-            }).then(canvas => {
-                canvas.toBlob(blob => {
-                    const link = document.createElement('a');
-                    link.download = 'thumbnail.png';
-                    link.href = URL.createObjectURL(blob);
-                    link.click();
-                    URL.revokeObjectURL(link.href);
-                }, 'image/png');
-            });
-        });
-    };
+    const cardRef = useRef(null);
 
     const [videoDetails, setVideoDetails] = useState({});
     const [styles, setStyles] = useState({
@@ -52,6 +23,7 @@ function Thumbnail() {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'flex-start',
+            textAlign: 'left',
         },
         img: {
             width: '100%',
@@ -61,6 +33,7 @@ function Thumbnail() {
             margin: 0,
             fontSize: '18px',
             color: '#333',
+            padding: '10px',
         },
         p: {
             margin: '5px 0 0',
@@ -113,8 +86,8 @@ function Thumbnail() {
 
     return (
         !videoDetails ? <p>Loading...</p> :
-            <>
-                <div style={styles.videoThumbnail} ref={monElementRef}>
+            <div className='flex flex-col justify-center items-center gap-2'>
+                <div style={styles.videoThumbnail} ref={cardRef}>
                     <div style={styles.imageDiv}>
                         <img src={videoDetails.thumbnailUrl} alt="Video Thumbnail" style={styles.img} />
                         <div style={styles.bottomLeftElement}>
@@ -131,12 +104,19 @@ function Thumbnail() {
                             <p style={styles.p}>{videoDetails.views < 1000 ? videoDetails.views : videoDetails.views < 1000000 ? Math.floor(videoDetails.views / 1000) + ' k' : Math.floor(videoDetails.views / 1000000) + ' M'} vues • Il y a {videoDetails.daysSincePublished <= 30 ? videoDetails.daysSincePublished + ' jours' : videoDetails.daysSincePublished <= 365 ? Math.floor(videoDetails.daysSincePublished / 30) + ' mois' : Math.floor(videoDetails.daysSincePublished / 365) + ' ans'}</p>
                         </div>
                     </div>
-
-
                 </div>
 
-                <Button variant="outlined" onClick={telechargerImage}>Outlined</Button>
-            </>
+                <ButtonGroup
+                    disableElevation
+                    variant="contained"
+                    aria-label="Disabled button group"
+                >
+                    <Button variant="outlined" onClick={downloadImageDiv} startIcon={<DownloadIcon />}>Télécharger</Button>
+                    <Button startIcon={<ContentCopyIcon />} >Copier</Button>
+                </ButtonGroup>
+
+                
+            </div>
             
     );
 }
