@@ -2,24 +2,49 @@ import React, { useEffect, useState, useRef } from 'react';
 import { getVideoDetails } from '../../services/GetVideoDetailsService';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
-import { downloadImage } from '../../services/DownloadImageService';
+import { downloadImage, copyImageToClipboard } from '../../services/ImageService';
 import DownloadIcon from '@mui/icons-material/Download';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { FilledButton } from '../custom/CustomButton';
 import { Skeleton } from '@mui/material';
+import HourglassBottomIcon from '@mui/icons-material/HourglassBottom';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import LinearProgress from '@mui/material/LinearProgress';
 
 
-function Thumbnail({ videoId }) {
+function Thumbnail({ videoId, progressPercent }) {
 
     const [error, setError] = useState(null);
 
     const [isLoading, setIsLoading] = useState(false);
 
-    const downloadImageDiv = () => downloadImage(cardRef, videoDetails.thumbnailUrl, videoDetails.profilePictureUrl);
+    const [isDownloading, setIsDownloading] = useState(false);
+    const [isCopying, setIsCopying] = useState(false);
+    const [isValidDownload, setIsValidDownload] = useState(false);
+    const [isValidCopy, setIsValidCopy] = useState(false);
+
+    const validateOperation = (setIsValid) => {
+        setIsValid(true);
+        setTimeout(() => {
+            setIsValid(false);
+        }, 3000);
+    }
+
+    const downloadImageDiv = () => {
+        downloadImage(cardRef, setIsDownloading, videoDetails.thumbnailUrl, videoDetails.profilePictureUrl);
+        validateOperation(setIsValidDownload);
+    }
+    const copyImageDiv = () => {
+        copyImageToClipboard(cardRef, setIsCopying, videoDetails.thumbnailUrl, videoDetails.profilePictureUrl);
+        validateOperation(setIsValidCopy);
+    }
 
     const cardRef = useRef(null);
 
     const [videoDetails, setVideoDetails] = useState({});
+
+    const proxyUrl = `${process.env.REACT_APP_PROXY_URL}/proxy`;
+
 
     let viewsDisplay = undefined;
     let timeDisplay = undefined;
@@ -93,6 +118,13 @@ function Thumbnail({ videoId }) {
             padding: '0 5px 2px 5px', // Ajoutez un remplissage ici
             // Ajoutez d'autres styles pour cet élément ici
         },
+        progressBar: {
+            position: 'absolute',
+            left: '0',
+            bottom: '0',
+            width: '100%',
+
+        },
         imageDiv: {
             position: 'relative' // Ajout de la propriété de position ici
 
@@ -118,7 +150,12 @@ function Thumbnail({ videoId }) {
 
 
     return (
-        error && !isLoading ? <p>Error</p> :
+        error && !isLoading ?
+            <div className='flex flex-col justify-center items-center gap-2 text-red-600 border-solid border-2 border-red-600 p-5 rounded'>
+                <h1 className=''>Une erreur s'est produite :</h1>
+                <p>{error.message}</p>
+            </div>
+            :
             <div className='flex flex-col justify-center items-center gap-2'>
                 <div style={styles.videoThumbnail} ref={cardRef}>
                     <div style={styles.imageDiv}>
@@ -129,6 +166,9 @@ function Thumbnail({ videoId }) {
                         )}
                         <div style={styles.bottomLeftElement}>
                             {videoDetails.duration ? videoDetails.duration.join(':') : '0:00'}
+                        </div>
+                        <div style={styles.progressBar}>
+                            <LinearProgress variant="determinate" value={progressPercent} color='secondary' />
                         </div>
                     </div>
                     <h2 style={styles.h2}>
@@ -157,8 +197,8 @@ function Thumbnail({ videoId }) {
                     variant="contained"
                     aria-label="Disabled button group"
                 >
-                    <Button variant='outlined' onClick={downloadImageDiv} startIcon={<DownloadIcon />}>Télécharger</Button>
-                    <FilledButton startIcon={<ContentCopyIcon />} >Copier</FilledButton>
+                    <Button variant='outlined' onClick={downloadImageDiv} startIcon={isValidDownload ? <CheckCircleIcon/> : isDownloading ? <HourglassBottomIcon/> : <DownloadIcon />}>Télécharger</Button>
+                    <FilledButton onClick={ copyImageDiv } startIcon={isValidCopy ? <CheckCircleIcon/> : isCopying ? <HourglassBottomIcon/> : <ContentCopyIcon />} >Copier</FilledButton>
                 </ButtonGroup>
 
                 

@@ -14,7 +14,7 @@ async function getVideoDetails(videoId, controlLoading) {
         const data = await response.json();
 
         if (!data.items || data.items.length === 0) {
-            throw new Error('No video found with the provided ID');
+            throw new Error('Aucune vidéo trouvée avec cet ID !');
         }
 
         const videoDetails = data.items[0];
