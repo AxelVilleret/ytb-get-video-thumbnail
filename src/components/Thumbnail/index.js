@@ -5,6 +5,7 @@ import ButtonGroup from '@mui/material/ButtonGroup';
 import { downloadImage } from '../../services/DownloadImageService';
 import DownloadIcon from '@mui/icons-material/Download';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import { FilledButton } from '../custom/CustomButton';
 
 
 function Thumbnail() {
@@ -112,8 +113,8 @@ function Thumbnail() {
                     variant="contained"
                     aria-label="Disabled button group"
                 >
-                    <Button variant="outlined" onClick={downloadImageDiv} startIcon={<DownloadIcon />}>Télécharger</Button>
-                    <Button startIcon={<ContentCopyIcon />} >Copier</Button>
+                    <Button variant='outlined' onClick={downloadImageDiv} startIcon={<DownloadIcon />}>Télécharger</Button>
+                    <FilledButton startIcon={<ContentCopyIcon />} >Copier</FilledButton>
                 </ButtonGroup>
 
                 
