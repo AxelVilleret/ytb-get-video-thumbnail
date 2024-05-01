@@ -6,19 +6,43 @@ import { downloadImage } from '../../services/DownloadImageService';
 import DownloadIcon from '@mui/icons-material/Download';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { FilledButton } from '../custom/CustomButton';
+import { Skeleton } from '@mui/material';
 
 
-function Thumbnail() {
+function Thumbnail({ videoId }) {
+
+    const [error, setError] = useState(null);
+
+    const [isLoading, setIsLoading] = useState(false);
 
     const downloadImageDiv = () => downloadImage(cardRef, videoDetails.thumbnailUrl, videoDetails.profilePictureUrl);
 
     const cardRef = useRef(null);
 
     const [videoDetails, setVideoDetails] = useState({});
+
+    let viewsDisplay = undefined;
+    let timeDisplay = undefined;
+
+    if (videoDetails.views !== undefined) {
+        let views = videoDetails.views;
+        viewsDisplay = views < 1000 ? views : views < 1000000 ? Math.floor(views / 1000) + ' k' : Math.floor(views / 1000000) + ' M';
+    }
+
+    if (videoDetails.daysSincePublished !== undefined) {
+        let daysSincePublished = videoDetails.daysSincePublished;
+        timeDisplay = 'il y a ' + (daysSincePublished <= 30 ? daysSincePublished + ' jours' : daysSincePublished <= 365 ? Math.floor(daysSincePublished / 30) + ' mois' : Math.floor(daysSincePublished / 365) + ' ans');
+    }
+
+    let displayText = viewsDisplay ? viewsDisplay + ' vues • ' + timeDisplay : undefined;
+
+
+
     const [styles, setStyles] = useState({
         videoThumbnail: {
-            maxWidth: '400px',
-            minWidth: '300px',
+            // maxWidth: '400px',
+            // minWidth: '300px',
+            width: '350px',
             border: '1px solid #ddd',
             borderRadius: '4px',
             overflow: 'hidden',
@@ -76,34 +100,54 @@ function Thumbnail() {
     });
 
     useEffect(() => {
+        console.log('test');
         const getDetails = async () => {
-            const res = await getVideoDetails('BX7LyhtBqhk');
-            setVideoDetails(res);
+            try {
+                const details = await getVideoDetails(videoId, setIsLoading);
+                setVideoDetails(details);
+                setError(null);
+            } catch (error) {
+                setError(error);
+            }
+            setIsLoading(false);
         }
 
         getDetails();
-    }, []);
+    }, [videoId]);
 
 
 
     return (
-        !videoDetails ? <p>Loading...</p> :
+        error && !isLoading ? <p>Error</p> :
             <div className='flex flex-col justify-center items-center gap-2'>
                 <div style={styles.videoThumbnail} ref={cardRef}>
                     <div style={styles.imageDiv}>
-                        <img src={videoDetails.thumbnailUrl} alt="Video Thumbnail" style={styles.img} />
+                        {!isLoading ? (
+                            <img src={videoDetails.thumbnailUrl} alt="Video Thumbnail" style={styles.img} />
+                        ) : (
+                            <Skeleton variant="rectangular" width={350} height={175} />
+                        )}
                         <div style={styles.bottomLeftElement}>
                             {videoDetails.duration ? videoDetails.duration.join(':') : '0:00'}
                         </div>
                     </div>
-                    <h2 style={styles.h2}>{videoDetails.title}</h2>
-
+                    <h2 style={styles.h2}>
+                        {!isLoading ? videoDetails.title : <Skeleton variant="text" width={150} height={25} />}
+                    </h2>
 
                     <div style={styles.uploaderContainer}>
-                        <img src={videoDetails.profilePictureUrl} alt="Uploader Profile" style={styles.uploaderProfile} />
+                        {!isLoading ? (
+                            <img src={videoDetails.profilePictureUrl} alt="Uploader Profile" style={styles.uploaderProfile} />
+                        ) : (
+                            <Skeleton variant="circular" width={50} height={50} />
+                        )}
                         <div style={styles.uploaderInfo}>
-                            <p style={styles.p}>{videoDetails.uploader}</p>
-                            <p style={styles.p}>{videoDetails.views < 1000 ? videoDetails.views : videoDetails.views < 1000000 ? Math.floor(videoDetails.views / 1000) + ' k' : Math.floor(videoDetails.views / 1000000) + ' M'} vues • Il y a {videoDetails.daysSincePublished <= 30 ? videoDetails.daysSincePublished + ' jours' : videoDetails.daysSincePublished <= 365 ? Math.floor(videoDetails.daysSincePublished / 30) + ' mois' : Math.floor(videoDetails.daysSincePublished / 365) + ' ans'}</p>
+                            <p style={styles.p}>
+                                {!isLoading ? videoDetails.uploader : <Skeleton variant="text" width={100} height={18}/>}
+                            </p>
+                            <p style={styles.p}>
+                                {!isLoading ? displayText : <Skeleton variant="text" width={100} height={18}/>}
+                            </p>
                         </div>
                     </div>
                 </div>
