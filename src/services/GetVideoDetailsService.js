@@ -9,7 +9,7 @@ async function getVideoDetails(videoId, controlLoading) {
         const apiKey = process.env.REACT_APP_API_KEY;
         const url = `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&key=${apiKey}&part=snippet,contentDetails,statistics`;
         controlLoading(true);
-        await wait(1000);
+        await wait(3000);
         const response = await fetch(url);
         const data = await response.json();
 

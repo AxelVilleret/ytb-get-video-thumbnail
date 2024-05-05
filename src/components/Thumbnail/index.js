@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useContext } from 'react';
 import { getVideoDetails } from '../../services/GetVideoDetailsService';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
@@ -10,16 +10,14 @@ import { Skeleton } from '@mui/material';
 import HourglassBottomIcon from '@mui/icons-material/HourglassBottom';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import LinearProgress from '@mui/material/LinearProgress';
+import { useTheme } from '@mui/material/styles';
+import { Alert } from '@mui/material';
 
-
-function Thumbnail({ videoId, progressPercent, isChannelImage }) {
-    console.log('Thumbnail rendered');  
-    console.log(isChannelImage);
+function Thumbnail({ videoId, progressPercent, isChannelImage, radiusSize }) {
+    const theme = useTheme();
 
     const [error, setError] = useState(null);
-
     const [isLoading, setIsLoading] = useState(false);
-
     const [isDownloading, setIsDownloading] = useState(false);
     const [isCopying, setIsCopying] = useState(false);
     const [isValidDownload, setIsValidDownload] = useState(false);
@@ -42,11 +40,7 @@ function Thumbnail({ videoId, progressPercent, isChannelImage }) {
     }
 
     const cardRef = useRef(null);
-
     const [videoDetails, setVideoDetails] = useState({});
-
-    const proxyUrl = `${process.env.REACT_APP_PROXY_URL}/proxy`;
-
 
     let viewsDisplay = undefined;
     let timeDisplay = undefined;
@@ -64,9 +58,9 @@ function Thumbnail({ videoId, progressPercent, isChannelImage }) {
     let displayText = viewsDisplay ? viewsDisplay + ' vues • ' + timeDisplay : undefined;
 
     useEffect(() => {
-        console.log('test');
         const getDetails = async () => {
             try {
+                console.log('videoId', videoId);
                 const details = await getVideoDetails(videoId, setIsLoading);
                 setVideoDetails(details);
                 setError(null);
@@ -79,17 +73,12 @@ function Thumbnail({ videoId, progressPercent, isChannelImage }) {
         getDetails();
     }, [videoId]);
 
-
-
     return (
         error && !isLoading ?
-            <div className='flex flex-col justify-center items-center gap-2 text-red-600 border-2 border-red-600 p-5 rounded'>
-                <h1>Une erreur s'est produite :</h1>
-                <p>{error.message}</p>
-            </div>
+            <Alert severity="error" variant="outlined">{ error.message}</Alert>
             :
             <div className='flex flex-col justify-center items-center gap-2'>
-                <div className='w-80 border border-gray-300 rounded overflow-hidden flex flex-col items-start text-left' ref={cardRef}>
+                <div className={`w-80 border border-gray-300 rounded${radiusSize} overflow-hidden flex flex-col items-start text-left ${theme.palette.mode === 'dark' ? 'text-white bg-gray-800' : 'text-black bg-white'}`} ref={cardRef}>
                     <div className='relative'>
                         {!isLoading ? (
                             <img src={videoDetails.thumbnailUrl} alt="Video Thumbnail" className='w-full' />
@@ -108,9 +97,8 @@ function Thumbnail({ videoId, progressPercent, isChannelImage }) {
                                 </>
                             )
                         }
-                        
                     </div>
-                    <h2 className='text-lg text-gray-800 p-2.5'>
+                    <h2 className={`text-lg p-2.5 ${theme.palette.mode === 'dark' ? 'text-white' : 'text-black'}`}>
                         {!isLoading ? videoDetails.title : <Skeleton variant="text" width={150} height={25} />}
                     </h2>
 
@@ -120,10 +108,10 @@ function Thumbnail({ videoId, progressPercent, isChannelImage }) {
                             <Skeleton variant="circular" width={50} height={50} />
                         )}
                         <div className='flex flex-col items-start'>
-                            <p className='text-sm text-gray-600'>
+                            <p className={`text-sm ${theme.palette.mode === 'dark' ? 'text-white' : 'text-black'}`}>
                                 {!isLoading ? videoDetails.uploader : <Skeleton variant="text" width={100} height={18} />}
                             </p>
-                            <p className='text-sm text-gray-600'>
+                            <p className={`text-sm ${theme.palette.mode === 'dark' ? 'text-white' : 'text-black'}`}>
                                 {!isLoading ? displayText : <Skeleton variant="text" width={100} height={18} />}
                             </p>
                         </div>
