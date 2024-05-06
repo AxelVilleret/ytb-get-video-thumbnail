@@ -74,11 +74,13 @@ function Thumbnail({ videoId, progressPercent, isChannelImage, radiusSize }) {
     }, [videoId]);
 
     return (
-        error && !isLoading ?
-            <Alert severity="error" variant="outlined">{ error.message}</Alert>
-            :
-            <div className='flex flex-col justify-center items-center gap-2'>
-                <div className={`w-80 border border-gray-300 rounded${radiusSize} overflow-hidden flex flex-col items-start text-left ${theme.palette.mode === 'dark' ? 'text-white bg-gray-800' : 'text-black bg-white'}`} ref={cardRef}>
+        
+        <div className='flex flex-col justify-center items-center gap-2'>
+            {error && !isLoading ?
+                (<Alert severity="error" variant="outlined" className='grow-0'>{error.message}</Alert>)
+                :
+                (
+                    <><div className={`w-80 border border-gray-300 rounded${radiusSize} overflow-hidden flex flex-col items-start text-left ${theme.palette.mode === 'dark' ? 'text-white bg-gray-800' : 'text-black bg-white'}`} ref={cardRef}>
                     <div className='relative'>
                         {!isLoading ? (
                             <img src={videoDetails.thumbnailUrl} alt="Video Thumbnail" className='w-full' />
@@ -125,7 +127,8 @@ function Thumbnail({ videoId, progressPercent, isChannelImage, radiusSize }) {
                 >
                     <Button variant='outlined' onClick={downloadImageDiv} startIcon={isValidDownload ? <CheckCircleIcon /> : isDownloading ? <HourglassBottomIcon /> : <DownloadIcon />}>Télécharger</Button>
                     <FilledButton onClick={copyImageDiv} startIcon={isValidCopy ? <CheckCircleIcon /> : isCopying ? <HourglassBottomIcon /> : <ContentCopyIcon />} >Copier</FilledButton>
-                </ButtonGroup>
+            </ButtonGroup>
+            </>)}
             </div>
     );
 }
