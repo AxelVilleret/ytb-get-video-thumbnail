@@ -13,8 +13,10 @@ import LinearProgress from '@mui/material/LinearProgress';
 import { useTheme } from '@mui/material/styles';
 import { Alert } from '@mui/material';
 
-function Thumbnail({ videoId, progressPercent, isChannelImage, radiusSize }) {
+function Thumbnail({ settings: { videoId, isChannelImage, radiusSize, progressPercent } }) {
     const theme = useTheme();
+
+    console.log(radiusSize);
 
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -42,25 +44,17 @@ function Thumbnail({ videoId, progressPercent, isChannelImage, radiusSize }) {
     const cardRef = useRef(null);
     const [videoDetails, setVideoDetails] = useState({});
 
-    let viewsDisplay = undefined;
-    let timeDisplay = undefined;
+    const views = videoDetails.views ? videoDetails.views : 0;
+    const viewsDisplay = views < 1000 ? views : views < 1000000 ? Math.floor(views / 1000) + ' k' : Math.floor(views / 1000000) + ' M';
 
-    if (videoDetails.views !== undefined) {
-        let views = videoDetails.views;
-        viewsDisplay = views < 1000 ? views : views < 1000000 ? Math.floor(views / 1000) + ' k' : Math.floor(views / 1000000) + ' M';
-    }
+    const daysSincePublished = videoDetails.daysSincePublished ? videoDetails.daysSincePublished : 0;
+    const timeDisplay = 'il y a ' + (daysSincePublished <= 30 ? daysSincePublished + ' jours' : daysSincePublished <= 365 ? Math.floor(daysSincePublished / 30) + ' mois' : Math.floor(daysSincePublished / 365) + ' ans');
 
-    if (videoDetails.daysSincePublished !== undefined) {
-        let daysSincePublished = videoDetails.daysSincePublished;
-        timeDisplay = 'il y a ' + (daysSincePublished <= 30 ? daysSincePublished + ' jours' : daysSincePublished <= 365 ? Math.floor(daysSincePublished / 30) + ' mois' : Math.floor(daysSincePublished / 365) + ' ans');
-    }
-
-    let displayText = viewsDisplay ? viewsDisplay + ' vues • ' + timeDisplay : undefined;
+    let displayText = viewsDisplay + ' vues • ' + timeDisplay;
 
     useEffect(() => {
         const getDetails = async () => {
             try {
-                console.log('videoId', videoId);
                 const details = await getVideoDetails(videoId, setIsLoading);
                 setVideoDetails(details);
                 setError(null);

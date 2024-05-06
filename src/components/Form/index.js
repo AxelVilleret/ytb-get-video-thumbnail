@@ -11,38 +11,33 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import { localStorageService } from '../../services/LocalStorageService';
 
 
-function Form({ onSearch, onSliderChange, onSwitchChange, onDiscretSliderChange, settings, setCurrentSettings, resetSettings}) {
+function Form({ settings, onSettingsChange, onReset }) {
 
     const theme = useTheme();
 
     let numberToSize = new Map([[10, '-none'], [20, ''], [30, '-2xl']]);
 
     const extractVideoId = (e) => {
-        console.log(e.target.value);
         const url = e.target.value;
         const videoId = url.split('v=')[1] ? url.split('v=')[1].split('&')[0] : 'not found';
-        onSearch(videoId);
         localStorageService.setItem('settings', { ...settings, videoId });
-        setCurrentSettings({ ...settings, videoId });
+        onSettingsChange({ ...settings, videoId });
     }
 
     const handleSliderChange = (e) => {
-        onSliderChange(e.target.value);
         localStorageService.setItem('settings', { ...settings, progressPercent: e.target.value });
-        setCurrentSettings({ ...settings, progressPercent: e.target.value });
+        onSettingsChange({ ...settings, progressPercent: e.target.value });
     }
 
     const handleSwitchChange = (e) => {
-        onSwitchChange(e.target.checked);
         localStorageService.setItem('settings', { ...settings, isChannelImage: e.target.checked });
-        setCurrentSettings({ ...settings, isChannelImage: e.target.checked });
+        onSettingsChange({ ...settings, isChannelImage: e.target.checked });
     }
 
     const handleDiscretSliderChange = (e) => {
         const strValue = numberToSize.get(e.target.value);
-        onDiscretSliderChange(strValue);
         localStorageService.setItem('settings', { ...settings, radiusSize: strValue });
-        setCurrentSettings({ ...settings, radiusSize: strValue });
+        onSettingsChange({ ...settings, radiusSize: strValue });
     }
 
 
@@ -68,7 +63,7 @@ function Form({ onSearch, onSliderChange, onSwitchChange, onDiscretSliderChange,
             </div>
 
             <div className='flex flex-col justify-center items-center'>
-                <FilledButton startIcon={<RefreshIcon/>} variant="contained" className='gradientButton' onClick={() => {resetSettings();}}>Réinitialiser</FilledButton>
+                <FilledButton startIcon={<RefreshIcon/>} variant="contained" className='gradientButton' onClick={() => {onReset();}}>Réinitialiser</FilledButton>
             </div>
         </div>
     );
