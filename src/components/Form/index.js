@@ -1,19 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import TextField from '@mui/material/TextField';
 import { FilledButton } from '../custom/CustomButton';
 import Slider from '@mui/material/Slider';
 import Typography from '@mui/material/Typography';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
-import MaterialUISwitch from '../custom/CustomSwitch';
-import { useTheme } from '@mui/material/styles';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { localStorageService } from '../../services/LocalStorageService';
 
 
 function Form({ settings, onSettingsChange, onReset }) {
-
-    const theme = useTheme();
 
     let numberToSize = new Map([[10, '-none'], [20, ''], [30, '-2xl']]);
 

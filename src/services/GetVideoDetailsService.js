@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 function wait(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }

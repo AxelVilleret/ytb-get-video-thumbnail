@@ -1,6 +1,5 @@
 import './App.css';
 import React from 'react';
-import Button from '@mui/material/Button';
 import Container from './components/Container/index.js';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
