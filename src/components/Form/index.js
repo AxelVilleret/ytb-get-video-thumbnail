@@ -38,7 +38,7 @@ function Form({ settings, onSettingsChange, onReset }) {
 
 
     return (
-        <div className='flex flex-col gap-5 justify-center gap-2'>
+        <div className='flex flex-col gap-5 justify-center gap-2 md:w-80'>
 
             <TextField label="URL de la vidéo" variant="outlined" onChange={extractVideoId} value={`https://www.youtube.com/watch?v=${settings.videoId}`}/>
             <div className='text-left'>

@@ -7,6 +7,7 @@ import { useContext } from 'react';
 import { ThemeContext } from '../ThemeContext';
 import { localStorageService } from '../../services/LocalStorageService';
 import { CircularProgress } from '@mui/material';
+import Divider from '@mui/material/Divider';
 
 function Container() {
 
@@ -41,11 +42,12 @@ function Container() {
 
   return (
     isLoading ? <CircularProgress color="inherit" /> :
-    <div className={`flex flex-col gap-5 justify-center shadow-md rounded-2xl p-5 ${theme.palette.mode === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-black'} h-1/3`}>
-      <div className='flex justify-center gap-5'>
-      <h1 className='text-xl'>Récupérez votre miniature YouTube au format PNG !</h1>
+    <div className={`flex flex-col gap-5 justify-center shadow-md rounded-2xl p-5 ${theme.palette.mode === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-black'} w-96 md:w-auto`}>
+        <div className='flex justify-center items-center gap-5'>
+        <h1 className='text-xl'>Récupérez votre miniature YouTube au format PNG !</h1>
         <MaterialUISwitch theme={theme} checked={theme.palette.mode === 'dark'} onChange={toggleTheme} />
-      </div>
+        </div>
+        <Divider/>
       <div className='flex justify-center gap-5 flex-col md:flex-row'>
         <Form settings={currentSettings} onSettingsChange={setCurrentSettings} onReset={resetSettings} />
         <Thumbnail settings={currentSettings} />
