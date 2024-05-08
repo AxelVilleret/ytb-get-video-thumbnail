@@ -65,4 +65,5 @@ const swapImages = (thumbnailUrl, profilePictureUrl, cardRef) => {
     })))
 }
 
+
 export { downloadImage, copyImageToClipboard };
