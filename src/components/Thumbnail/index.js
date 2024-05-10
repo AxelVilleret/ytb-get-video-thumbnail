@@ -85,7 +85,8 @@ function Thumbnail({ settings: { videoId, isChannelImage, radiusSize, progressPe
                             !isLoading && (
                                 <>
                                     <div className='absolute right-2 bottom-2 bg-black text-white rounded px-1'>
-                                        {videoDetails.duration ? videoDetails.duration.join(':') : '0:00'}
+                                            {/* {videoDetails.duration ? videoDetails.duration.join(':') : '0:00'} */}
+                                            16:9
                                     </div>
                                     <div className='absolute left-0 bottom-0 w-full'>
                                         <LinearProgress variant="determinate" value={progressPercent} color='secondary' />

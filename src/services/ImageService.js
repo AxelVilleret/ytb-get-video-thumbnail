@@ -6,10 +6,10 @@ function wait(ms) {
 
 // Fonction pour télécharger l'image
 const downloadImage = async (cardRef, controlLoading, thumbnailUrl, profilePictureUrl) => {
+    controlLoading(true);
     await swapImages(thumbnailUrl, profilePictureUrl, cardRef)
     await wait(3000);
     try {
-        controlLoading(true);
         const canvas = await html2canvas(cardRef.current, {
             useCORS: true,
             allowTaint: false
@@ -30,10 +30,10 @@ const downloadImage = async (cardRef, controlLoading, thumbnailUrl, profilePictu
 
 // Fonction pour copier l'image dans le presse-papier
 const copyImageToClipboard = async (cardRef, controlLoading, thumbnailUrl, profilePictureUrl) => {
+    controlLoading(true);
     await swapImages(thumbnailUrl, profilePictureUrl, cardRef)
     await wait(3000);
     try {
-        controlLoading(true);
         const canvas = await html2canvas(cardRef.current, {
             useCORS: true,
             allowTaint: false
