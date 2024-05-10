@@ -8,7 +8,6 @@ function wait(ms) {
 const downloadImage = async (cardRef, controlLoading, thumbnailUrl, profilePictureUrl) => {
     controlLoading(true);
     await swapImages(thumbnailUrl, profilePictureUrl, cardRef)
-    await wait(3000);
     try {
         const canvas = await html2canvas(cardRef.current, {
             useCORS: true,
@@ -32,7 +31,6 @@ const downloadImage = async (cardRef, controlLoading, thumbnailUrl, profilePictu
 const copyImageToClipboard = async (cardRef, controlLoading, thumbnailUrl, profilePictureUrl) => {
     controlLoading(true);
     await swapImages(thumbnailUrl, profilePictureUrl, cardRef)
-    await wait(3000);
     try {
         const canvas = await html2canvas(cardRef.current, {
             useCORS: true,
