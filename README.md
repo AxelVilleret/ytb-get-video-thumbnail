@@ -10,6 +10,12 @@ Ce projet est un utilitaire permettant de récupérer la miniature d'une vidéo 
 
 ## Utilisation
 
+Créez un fichier `.env` à la racine du projet et ajoutez-y la clé d'API YouTube en tant que variable d'environnement `REACT_APP_API_KEY`.
+
+```env
+YTB_API_KEY=VOTRE_CLE_API
+```
+
 Pour utiliser cet utilitaire, vous pouvez exécuter la commande suivante :
 
 ```bash
