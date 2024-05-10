@@ -32,12 +32,12 @@ function Thumbnail({ settings: { videoId, isChannelImage, radiusSize, progressPe
         }, 3000);
     }
 
-    const downloadImageDiv = () => {
-        downloadImage(cardRef, setIsDownloading, videoDetails.thumbnailUrl, videoDetails.profilePictureUrl);
+    const downloadImageDiv = async () => {
+        await downloadImage(cardRef, setIsDownloading, videoDetails.thumbnailUrl, videoDetails.profilePictureUrl);
         validateOperation(setIsValidDownload);
     }
-    const copyImageDiv = () => {
-        copyImageToClipboard(cardRef, setIsCopying, videoDetails.thumbnailUrl, videoDetails.profilePictureUrl);
+    const copyImageDiv = async () => {
+        await copyImageToClipboard(cardRef, setIsCopying, videoDetails.thumbnailUrl, videoDetails.profilePictureUrl);
         validateOperation(setIsValidCopy);
     }
 
