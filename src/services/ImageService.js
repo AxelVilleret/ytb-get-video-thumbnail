@@ -1,8 +1,13 @@
 import html2canvas from 'html2canvas';
 
+function wait(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 // Fonction pour télécharger l'image
 const downloadImage = async (cardRef, controlLoading, thumbnailUrl, profilePictureUrl) => {
     await swapImages(thumbnailUrl, profilePictureUrl, cardRef)
+    await wait(3000);
     try {
         controlLoading(true);
         const canvas = await html2canvas(cardRef.current, {
@@ -26,6 +31,7 @@ const downloadImage = async (cardRef, controlLoading, thumbnailUrl, profilePictu
 // Fonction pour copier l'image dans le presse-papier
 const copyImageToClipboard = async (cardRef, controlLoading, thumbnailUrl, profilePictureUrl) => {
     await swapImages(thumbnailUrl, profilePictureUrl, cardRef)
+    await wait(3000);
     try {
         controlLoading(true);
         const canvas = await html2canvas(cardRef.current, {
