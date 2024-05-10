@@ -1,5 +1,9 @@
 import html2canvas from 'html2canvas';
 
+async function wait(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 // Fonction pour télécharger l'image
 const downloadImage = async (cardRef, controlLoading, thumbnailUrl, profilePictureUrl) => {
     controlLoading(true);
@@ -44,7 +48,7 @@ const copyImageToClipboard = async (cardRef, controlLoading, thumbnailUrl, profi
     }
 };
 
-const swapImages = (thumbnailUrl, profilePictureUrl, cardRef) => {
+const swapImages = async (thumbnailUrl, profilePictureUrl, cardRef) => {
     // URL du serveur proxy que vous avez créé
     const proxyUrl = `${process.env.REACT_APP_PROXY_URL}/proxy`;
 
@@ -59,8 +63,10 @@ const swapImages = (thumbnailUrl, profilePictureUrl, cardRef) => {
     imageElements[0].src = thumbnailImageUrl;
     imageElements[1].src = profileImageUrl;
 
+    await wait(2000)
+
     // Attendre que les deux images soient chargées avant de capturer le canvas
-    return Promise.all(Array.from(imageElements).map(img => new Promise(resolve => {
+    await Promise.all(Array.from(imageElements).map(img => new Promise(resolve => {
         img.onload = resolve;
     })))
 }
