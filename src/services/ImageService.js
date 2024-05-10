@@ -1,9 +1,5 @@
 import html2canvas from 'html2canvas';
 
-async function wait(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
 // Fonction pour télécharger l'image
 const downloadImage = async (cardRef, controlLoading, thumbnailUrl, profilePictureUrl) => {
     controlLoading(true);
@@ -61,9 +57,8 @@ const swapImages = async (thumbnailUrl, profilePictureUrl, cardRef) => {
 
     // Modifier les éléments img pour utiliser les URL du proxy
     imageElements[0].src = thumbnailImageUrl;
-    imageElements[1].src = profileImageUrl;
-
-    await wait(2000)
+    if (imageElements.length > 1)
+        imageElements[1].src = profileImageUrl;
 
     // Attendre que les deux images soient chargées avant de capturer le canvas
     await Promise.all(Array.from(imageElements).map(img => new Promise(resolve => {
