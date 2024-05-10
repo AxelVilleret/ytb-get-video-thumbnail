@@ -1,9 +1,5 @@
 import html2canvas from 'html2canvas';
 
-function wait(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
 // Fonction pour télécharger l'image
 const downloadImage = async (cardRef, controlLoading, thumbnailUrl, profilePictureUrl) => {
     controlLoading(true);
