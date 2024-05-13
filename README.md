@@ -1,6 +1,6 @@
 # ytb-get-video-thumbnail
 
-This project is a utility that allows you to retrieve the thumbnail of a YouTube video using its URL.
+This project is a utility that allows you to retrieve the thumbnail of a YouTube video using its URL. It is a React application that uses the YouTube API to retrieve the video information and display the thumbnail. It also uses a proxy server to bypass the CORS policy when downloading the thumbnail. It embeds a dark mode feature to switch between light and dark themes and uses the localStorage to save the user's preference.
 
 ## Installation
 
