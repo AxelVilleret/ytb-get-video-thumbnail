@@ -1,4 +1,5 @@
 # ytb-get-video-thumbnail
+[![Netlify Status](https://api.netlify.com/api/v1/badges/540693c0-c7ba-4026-a881-763e98d81b5d/deploy-status)](https://app.netlify.com/sites/ytb-get-video-thumbnail/deploys)
 
 This project is a utility that allows you to retrieve the thumbnail of a YouTube video using its URL. It is a React application that uses the YouTube API to retrieve the video information and display the thumbnail. It also uses a proxy server to bypass the CORS policy when downloading the thumbnail. It embeds a dark mode feature to switch between light and dark themes and uses the localStorage to save the user's preference.
 
