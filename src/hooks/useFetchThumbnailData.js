@@ -5,7 +5,7 @@ import { debounce } from "lodash";
 let currentVideoId = '';
 
 function extractVideoId(videoUrl) {
-    return videoUrl.split('v=')[1] ? videoUrl.split('v=')[1].split('&')[0] : 'not found';
+    return videoUrl?.split('v=')[1] ? videoUrl.split('v=')[1].split('&')[0] : 'not found';
 }
 
 export const useFetchThumbnailData = (videoUrl) => {
