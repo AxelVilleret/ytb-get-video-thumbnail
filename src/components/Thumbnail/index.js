@@ -1,8 +1,6 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { getVideoDetails } from '../../services/GetVideoDetailsService';
+import React, { useRef } from 'react';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
-import { downloadImage, copyImageToClipboard } from '../../services/ImageService';
 import DownloadIcon from '@mui/icons-material/Download';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { FilledButton } from '../custom/CustomButton';
@@ -12,65 +10,24 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import LinearProgress from '@mui/material/LinearProgress';
 import { useTheme } from '@mui/material/styles';
 import { Alert } from '@mui/material';
+import { getStatsDisplay } from '../../utils/displays';
+import { useFetchThumbnailData } from '../../hooks/useFetchThumbnailData';
+import useImageOperations from '../../hooks/useImageOperations';
 
-function Thumbnail({ settings: { videoId, isChannelImage, radiusSize, progressPercent } }) {
+function Thumbnail({ settings: { videoUrl, isChannelImage, radiusSize, progressPercent } }) {
+
     const theme = useTheme();
 
-    console.log(radiusSize);
+    const { videoDetails, error, isLoading } = useFetchThumbnailData(videoUrl);
 
-    const [error, setError] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
-    const [isDownloading, setIsDownloading] = useState(false);
-    const [isCopying, setIsCopying] = useState(false);
-    const [isValidDownload, setIsValidDownload] = useState(false);
-    const [isValidCopy, setIsValidCopy] = useState(false);
+    const cardRef = useRef(null);    
 
-    const validateOperation = (setIsValid) => {
-        setIsValid(true);
-        setTimeout(() => {
-            setIsValid(false);
-        }, 3000);
-    }
-
-    const downloadImageDiv = async () => {
-        await downloadImage(cardRef, setIsDownloading, videoDetails.thumbnailUrl, videoDetails.profilePictureUrl);
-        validateOperation(setIsValidDownload);
-    }
-    const copyImageDiv = async () => {
-        await copyImageToClipboard(cardRef, setIsCopying, videoDetails.thumbnailUrl, videoDetails.profilePictureUrl);
-        validateOperation(setIsValidCopy);
-    }
-
-    const cardRef = useRef(null);
-    const [videoDetails, setVideoDetails] = useState({});
-
-    const views = videoDetails.views ? videoDetails.views : 0;
-    const viewsDisplay = views < 1000 ? views : views < 1000000 ? Math.floor(views / 1000) + ' k' : Math.floor(views / 1000000) + ' M';
-
-    const daysSincePublished = videoDetails.daysSincePublished ? videoDetails.daysSincePublished : 0;
-    const timeDisplay = 'il y a ' + (daysSincePublished <= 30 ? daysSincePublished + ' jours' : daysSincePublished <= 365 ? Math.floor(daysSincePublished / 30) + ' mois' : Math.floor(daysSincePublished / 365) + ' ans');
-
-    let displayText = viewsDisplay + ' vues • ' + timeDisplay;
-
-    useEffect(() => {
-        const getDetails = async () => {
-            try {
-                const details = await getVideoDetails(videoId, setIsLoading);
-                setVideoDetails(details);
-                setError(null);
-            } catch (error) {
-                setError(error);
-            }
-            setIsLoading(false);
-        }
-
-        getDetails();
-    }, [videoId]);
+    const { isDownloading, isCopying, isValidDownload, isValidCopy, downloadImageDiv, copyImageDiv } = useImageOperations(cardRef, videoDetails);
 
     return (
         
         <div className='flex flex-col justify-center items-center gap-2'>
-            {error && !isLoading ?
+            {error ?
                 (<Alert severity="error" variant="outlined" className='grow-0'>{error.message}</Alert>)
                 :
                 (
@@ -85,7 +42,7 @@ function Thumbnail({ settings: { videoId, isChannelImage, radiusSize, progressPe
                             !isLoading && (
                                 <>
                                     <div className='absolute right-2 bottom-2 bg-black text-white rounded px-1'>
-                                        {videoDetails.duration ? videoDetails.duration.join(':') : '0:00'}
+                                        { videoDetails.duration.join(':') }
                                     </div>
                                     <div className='absolute left-0 bottom-0 w-full'>
                                         <LinearProgress variant="determinate" value={progressPercent} color='secondary' />
@@ -108,7 +65,7 @@ function Thumbnail({ settings: { videoId, isChannelImage, radiusSize, progressPe
                                 {!isLoading ? videoDetails.uploader : <Skeleton variant="text" width={100} height={18} />}
                             </p>
                             <p className={`text-sm ${theme.palette.mode === 'dark' ? 'text-white' : 'text-black'}`}>
-                                {!isLoading ? displayText : <Skeleton variant="text" width={100} height={18} />}
+                                {!isLoading ? getStatsDisplay(videoDetails.views, videoDetails.daysSincePublished) : <Skeleton variant="text" width={100} height={18} />}
                             </p>
                         </div>
                     </div>

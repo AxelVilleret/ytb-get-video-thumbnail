@@ -6,41 +6,31 @@ import Typography from '@mui/material/Typography';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import RefreshIcon from '@mui/icons-material/Refresh';
-import { localStorageService } from '../../services/LocalStorageService';
-
 
 function Form({ settings, onSettingsChange, onReset }) {
 
     let numberToSize = new Map([[10, '-none'], [20, ''], [30, '-2xl']]);
 
-    const extractVideoId = (e) => {
-        const url = e.target.value;
-        const videoId = url.split('v=')[1] ? url.split('v=')[1].split('&')[0] : 'not found';
-        localStorageService.setItem('settings', { ...settings, videoId });
-        onSettingsChange({ ...settings, videoId });
+    const handleVideoUrlChange = (e) => {
+        onSettingsChange({ ...settings, videoUrl: e.target.value });
     }
 
     const handleSliderChange = (e) => {
-        localStorageService.setItem('settings', { ...settings, progressPercent: e.target.value });
         onSettingsChange({ ...settings, progressPercent: e.target.value });
     }
 
     const handleSwitchChange = (e) => {
-        localStorageService.setItem('settings', { ...settings, isChannelImage: e.target.checked });
         onSettingsChange({ ...settings, isChannelImage: e.target.checked });
     }
 
     const handleDiscretSliderChange = (e) => {
-        const strValue = numberToSize.get(e.target.value);
-        localStorageService.setItem('settings', { ...settings, radiusSize: strValue });
-        onSettingsChange({ ...settings, radiusSize: strValue });
+        onSettingsChange({ ...settings, radiusSize: numberToSize.get(e.target.value) });
     }
 
 
     return (
         <div className='flex flex-col gap-5 justify-center md:w-80'>
-
-            <TextField label="URL de la vidéo" variant="outlined" onChange={extractVideoId} value={`https://www.youtube.com/watch?v=${settings.videoId}`}/>
+            <TextField label="URL de la vidéo" variant="outlined" onChange={handleVideoUrlChange} value={settings.videoUrl}/>
             <div className='text-left'>
                 <Typography id="progress-slider" gutterBottom>
                     Avancement de la vidéo
@@ -59,7 +49,7 @@ function Form({ settings, onSettingsChange, onReset }) {
             </div>
 
             <div className='flex flex-col justify-center items-center'>
-                <FilledButton startIcon={<RefreshIcon/>} variant="contained" className='gradientButton' onClick={() => {onReset();}}>Réinitialiser</FilledButton>
+                <FilledButton startIcon={<RefreshIcon/>} variant="contained" className='gradientButton' onClick={onReset}>Réinitialiser</FilledButton>
             </div>
         </div>
     );

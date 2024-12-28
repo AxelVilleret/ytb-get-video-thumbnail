@@ -1,5 +1,5 @@
 export const localStorageService = {
-    setItem: (key, value) => {
+    persist: (key, value) => {
         if (!key || !value) {
             return;
         }
@@ -12,13 +12,13 @@ export const localStorageService = {
         }
     },
 
-    getItem: (key) => {
+    retrieve: (key) => {
         if (!key) {
             return null;
         }
 
         try {
-            const value = localStorage.getItem(key);
+            const value = localStorage.getItem(key);  
             return value ? JSON.parse(value) : null;
         } catch (error) {
             console.error(`Erreur lors de la récupération du localStorage : ${error}`);
@@ -26,7 +26,7 @@ export const localStorageService = {
         }
     },
 
-    removeItem: (key) => {
+    remove: (key) => {
         if (!key) {
             return;
         }
