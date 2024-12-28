@@ -24,6 +24,9 @@ export const UrlStorageService = {
     retrieve: () => {
         const queryString = window.location.search.slice(1);
         const parsedSettings = qs.parse(queryString); 
+        if (Object.keys(parsedSettings).length === 0) {
+            return null;
+        }
         return convertValues(parsedSettings);
     },
 };
