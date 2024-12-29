@@ -1,18 +1,10 @@
-import { useState } from "react";
+import { RefObject, useState } from "react";
 import { copyImageToClipboard, downloadImage } from "../services/ImageService";
-
-interface VideoDetails {
-    thumbnailUrl: string;
-    profilePictureUrl: string;
-}
-
-type RefObject<T> = {
-    current: T | null;
-};
+import { VideoInfo } from "../services/GetVideoDetailsService";
 
 const useImageOperations = (
-    cardRef: RefObject<HTMLDivElement>,
-    videoDetails: VideoDetails | null
+    cardRef: RefObject<HTMLDivElement | null>,
+    videoDetails: VideoInfo | null
 ) => {
     const [isDownloading, setIsDownloading] = useState(false);
     const [isCopying, setIsCopying] = useState(false);
@@ -20,7 +12,7 @@ const useImageOperations = (
     const [isValidCopy, setIsValidCopy] = useState(false);
 
     const performOperation = async (
-        operation: (ref: RefObject<HTMLDivElement>, thumbnailUrl: string, profilePictureUrl: string) => Promise<void>,
+        operation: (ref: RefObject<HTMLDivElement | null>, thumbnailUrl: string, profilePictureUrl: string) => Promise<void>,
         validator: (status: boolean) => void,
         loader: (loading: boolean) => void
     ) => {

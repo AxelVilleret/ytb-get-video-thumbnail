@@ -33,9 +33,9 @@ export const useSettings = () => {
     };
 
     useEffect(() => {
-        let settings: Settings | null = UrlStorageService.retrieve() as Settings | null;
+        let settings = UrlStorageService.retrieve<Settings>();
         if (!settings) {
-            settings = localStorageService.retrieve(STORAGE_KEY) as Settings | null;
+            settings = localStorageService.retrieve<Settings>(STORAGE_KEY);
         }
         if (!settings) {
             settings = DEFAULT_SETTINGS;

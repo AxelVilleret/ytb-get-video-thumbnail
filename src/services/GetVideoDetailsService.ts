@@ -43,19 +43,14 @@ export interface VideoInfo {
 }
 
 async function getVideoDetails(videoId: string): Promise<VideoInfo> {
-    try {
-        if (videoId === 'not found') throw new Error('Invalid video URL');
+    if (videoId === 'not found') throw new Error('Invalid video URL');
 
-        const apiKey = process.env.REACT_APP_API_KEY;
-        const videoDetails = await fetchVideoDetails(videoId, apiKey!);
-        const channelDetails = await fetchChannelDetails(videoDetails.snippet.channelId, apiKey!);
+    const apiKey = process.env.REACT_APP_API_KEY;
+    const videoDetails = await fetchVideoDetails(videoId, apiKey!);
+    const channelDetails = await fetchChannelDetails(videoDetails.snippet.channelId, apiKey!);
 
-        const videoInfo = formatVideoDetails(videoDetails, channelDetails);
-        return videoInfo;
-    } catch (error) {
-        console.error(error);
-        throw error;
-    }
+    const videoInfo = formatVideoDetails(videoDetails, channelDetails);
+    return videoInfo;
 }
 
 async function fetchVideoDetails(videoId: string, apiKey: string): Promise<VideoDetails> {
@@ -101,7 +96,7 @@ function formatVideoDetails(videoDetails: VideoDetails, channelDetails: ChannelD
 }
 
 function formatDuration(duration: string): number[] {
-    let time = [0, 0, 0];
+    const time = [0, 0, 0];
 
     const hours = duration.match(/(\d+)(?=[H])/gi);
     const minutes = duration.match(/(\d+)(?=[M])/gi);

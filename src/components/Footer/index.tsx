@@ -1,7 +1,9 @@
+import React, { useContext } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Link from '@mui/material/Link';
+import { ThemeContext } from '../../App';
 
 function Copyright() {
     return (
@@ -17,6 +19,8 @@ function Copyright() {
 }
 
 export default function Footer() {
+
+    const { darkThemeActive } = useContext(ThemeContext);
     return (
                 <Box
                     component="footer"
@@ -24,14 +28,13 @@ export default function Footer() {
                         py: 3,
                         px: 2,
                         mt: 'auto',
-                        backgroundColor: (theme) =>
-                            theme.palette.mode === 'light'
-                                ? theme.palette.grey[200]
-                                : theme.palette.grey[800],
+                        backgroundColor: darkThemeActive
+                            ? 'rgba(0, 0, 0, 0.87)'
+                            : 'rgba(255, 255, 255, 0.87)',
                     }}
                 >
                     <Container maxWidth="sm">
-                        <Typography variant="body1">
+                        <Typography variant="body1" color={darkThemeActive ? 'text.primary' : 'text.secondary'}>
                             Made with ❤️ by Axel Villeret
                         </Typography>
                         <Copyright />

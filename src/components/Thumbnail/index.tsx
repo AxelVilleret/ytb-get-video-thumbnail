@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useContext, useRef } from 'react';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import DownloadIcon from '@mui/icons-material/Download';
@@ -8,12 +8,12 @@ import { Skeleton } from '@mui/material';
 import HourglassBottomIcon from '@mui/icons-material/HourglassBottom';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import LinearProgress from '@mui/material/LinearProgress';
-import { useTheme } from '@mui/material/styles';
 import { Alert } from '@mui/material';
 import { getStatsDisplay } from '../../utils/displays';
 import { useFetchThumbnailData } from '../../hooks/useFetchThumbnailData';
 import useImageOperations from '../../hooks/useImageOperations';
 import { Settings } from '../../hooks/useSettings';
+import { ThemeContext } from '../../App';
 
 interface ThumbnailProps {
     settings: Settings;
@@ -21,11 +21,11 @@ interface ThumbnailProps {
 
 const Thumbnail: React.FC<ThumbnailProps> = ({ settings: { videoUrl, isChannelImage, radiusSize, progressPercent } }) => {
 
-    const theme = useTheme();
+    const { darkThemeActive } = useContext(ThemeContext);
 
     const { videoDetails, error, isLoading } = useFetchThumbnailData(videoUrl);
 
-    const cardRef = useRef < HTMLDivElement > (null);
+    const cardRef = useRef<HTMLDivElement>(null);
 
     const { isDownloading, isCopying, isValidDownload, isValidCopy, downloadImageDiv, copyImageDiv } = useImageOperations(cardRef, videoDetails);
 
@@ -36,7 +36,7 @@ const Thumbnail: React.FC<ThumbnailProps> = ({ settings: { videoUrl, isChannelIm
                 :
                 (
                     <>
-                        <div className={`w-80 border border-gray-300 rounded${radiusSize} overflow-hidden flex flex-col items-start text-left ${theme.palette.mode === 'dark' ? 'text-white bg-gray-800' : 'text-black bg-white'}`} ref={cardRef}>
+                        <div className={`w-80 border border-gray-300 rounded${radiusSize} overflow-hidden flex flex-col items-start text-left ${darkThemeActive ? 'text-white bg-gray-800' : 'text-black bg-white'}`} ref={cardRef}>
                             <div className='relative'>
                                 {!isLoading ? (
                                     <img src={videoDetails!.thumbnailUrl} alt="Video Thumbnail" className='w-full' />
@@ -56,7 +56,7 @@ const Thumbnail: React.FC<ThumbnailProps> = ({ settings: { videoUrl, isChannelIm
                                     )
                                 }
                             </div>
-                            <h2 className={`text-lg p-2.5 ${theme.palette.mode === 'dark' ? 'text-white' : 'text-black'}`}>
+                            <h2 className={`text-lg p-2.5 ${darkThemeActive ? 'text-white' : 'text-black'}`}>
                                 {!isLoading ? videoDetails!.title : <Skeleton variant="text" width={150} height={25} />}
                             </h2>
 
@@ -66,10 +66,10 @@ const Thumbnail: React.FC<ThumbnailProps> = ({ settings: { videoUrl, isChannelIm
                                     <Skeleton variant="circular" width={50} height={50} />
                                 )}
                                 <div className='flex flex-col items-start'>
-                                    <p className={`text-sm ${theme.palette.mode === 'dark' ? 'text-white' : 'text-black'}`}>
+                                    <p className={`text-sm ${darkThemeActive ? 'text-white' : 'text-black'}`}>
                                         {!isLoading ? videoDetails!.uploader : <Skeleton variant="text" width={100} height={18} />}
                                     </p>
-                                    <p className={`text-sm ${theme.palette.mode === 'dark' ? 'text-white' : 'text-black'}`}>
+                                    <p className={`text-sm ${darkThemeActive ? 'text-white' : 'text-black'}`}>
                                         {!isLoading ? getStatsDisplay(videoDetails!.views, videoDetails!.daysSincePublished) : <Skeleton variant="text" width={100} height={18} />}
                                     </p>
                                 </div>

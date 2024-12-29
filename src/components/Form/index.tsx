@@ -55,7 +55,7 @@ const Form: React.FC<FormProps> = ({ settings, onSettingsChange, onReset }) => {
                 </Typography>
                 <Slider
                     aria-labelledby="discret-slider"
-                    value={[...numberToSize.entries()].find(([k, v]) => v === settings.radiusSize)?.[0] || 20}
+                    value={[...numberToSize.entries()].find(([, v]) => v === settings.radiusSize)?.[0] || 20}
                     step={10}
                     marks
                     min={10}

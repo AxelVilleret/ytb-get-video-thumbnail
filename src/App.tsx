@@ -1,21 +1,28 @@
 import './App.css';
 import React, { useState } from 'react';
 import Container from './components/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { ThemeContext } from './components/ThemeContext';
 import Footer from './components/Footer';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+interface ThemeContextProps {
+  darkThemeActive?: boolean;
+  toggleTheme?: () => void;
+}
+
+export const ThemeContext = React.createContext<ThemeContextProps>({});
+const ThemeContextProvider = ThemeContext.Provider;
 
 const App: React.FC = () => {
-  const [darkMode, setDarkMode] = useState(useMediaQuery('(prefers-color-scheme: dark)') ? true : false);
+  const [darkThemeActive, setDarkThemeActive] = useState(useMediaQuery('(prefers-color-scheme: dark)') ? true : false);
 
   const toggleTheme = () => {
-    setDarkMode(!darkMode);
+    setDarkThemeActive(!darkThemeActive);
   };
 
   const theme = createTheme({
     palette: {
-      mode: darkMode ? 'dark' : 'light',
+      mode: darkThemeActive ? 'dark' : 'light',
       primary: {
         main: '#7c3aed',
       },
@@ -27,14 +34,14 @@ const App: React.FC = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <ThemeContext.Provider value={{ theme: theme.palette.mode, toggleTheme }}>
+      <ThemeContextProvider value={{ darkThemeActive, toggleTheme }}>
         <div className="App flex flex-col">
           <div className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 flex justify-center items-center grow">
             <Container />
           </div>
           <Footer />
         </div>
-      </ThemeContext.Provider>
+      </ThemeContextProvider>
     </ThemeProvider>
   );
 }
