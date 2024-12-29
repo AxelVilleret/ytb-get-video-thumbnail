@@ -1,6 +1,10 @@
 import qs from 'qs';
 
-const convertValues = (settings) => {
+interface Configuration {
+    [key: string]: any;
+}
+
+const convertValues = (settings: Configuration): Configuration => {
     const convertedSettings = { ...settings };
 
     Object.keys(convertedSettings).forEach(key => {
@@ -14,16 +18,16 @@ const convertValues = (settings) => {
     return convertedSettings;
 };
 
-
 export const UrlStorageService = {
-    persist: (value) => {
+    persist: (value: Configuration): void => {
         const queryString = qs.stringify(value);
-        const newUrl = `${window.location.pathname}?${queryString}`; window.history.replaceState(null, '', newUrl);
+        const newUrl = `${window.location.pathname}?${queryString}`;
+        window.history.replaceState(null, '', newUrl);
     },
 
-    retrieve: () => {
+    retrieve: (): Configuration | null => {
         const queryString = window.location.search.slice(1);
-        const parsedSettings = qs.parse(queryString); 
+        const parsedSettings = qs.parse(queryString) as Configuration;
         if (Object.keys(parsedSettings).length === 0) {
             return null;
         }

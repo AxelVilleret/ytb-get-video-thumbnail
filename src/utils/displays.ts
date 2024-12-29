@@ -1,4 +1,4 @@
-const getViewsDisplay = (views) => {
+const getViewsDisplay = (views: number) => {
     if (views < 1000) {
         return views.toString();
     } else if (views < 1000000) {
@@ -8,7 +8,7 @@ const getViewsDisplay = (views) => {
     }
 };
 
-const getDaysSincePublishedDisplay = (days) => {
+const getDaysSincePublishedDisplay = (days: number) => {
     let display = 'Il y a ';
     if (days < 1) {
         display = 'Aujourd\'hui';
@@ -20,6 +20,6 @@ const getDaysSincePublishedDisplay = (days) => {
     return display;
 }
 
-export const getStatsDisplay = (views, days) => {
+export const getStatsDisplay = (views: number, days: number) => {
     return getViewsDisplay(views) + ' vues • ' + getDaysSincePublishedDisplay(days);
 }

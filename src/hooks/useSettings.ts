@@ -2,7 +2,14 @@ import { useState, useEffect } from 'react';
 import { localStorageService } from '../services/LocalStorageService';
 import { UrlStorageService } from '../services/UrlStorageService';
 
-const DEFAULT_SETTINGS = {
+export interface Settings {
+    videoUrl: string;
+    progressPercent: number;
+    isChannelImage: boolean;
+    radiusSize: string;
+}
+
+const DEFAULT_SETTINGS: Settings = {
     videoUrl: 'https://www.youtube.com/watch?v=gXtp6C-3JKo',
     progressPercent: 80,
     isChannelImage: true,
@@ -13,23 +20,22 @@ const STORAGE_KEY = 'settings';
 
 export const useSettings = () => {
     const [isLoading, setIsLoading] = useState(true);
+    const [currentSettings, setCurrentSettings] = useState<Settings | null>(null);
 
-    const [currentSettings, setCurrentSettings] = useState(null);
-
-    const updateSettings = (newSettings) => {
+    const updateSettings = (newSettings: Settings): void => {
         setCurrentSettings(newSettings);
         localStorageService.persist(STORAGE_KEY, newSettings);
         UrlStorageService.persist(newSettings);
     };
 
-    const resetSettings = () => {
+    const resetSettings = (): void => {
         updateSettings(DEFAULT_SETTINGS);
     };
 
     useEffect(() => {
-        let settings = UrlStorageService.retrieve();
+        let settings: Settings | null = UrlStorageService.retrieve() as Settings | null;
         if (!settings) {
-            settings = localStorageService.retrieve(STORAGE_KEY);
+            settings = localStorageService.retrieve(STORAGE_KEY) as Settings | null;
         }
         if (!settings) {
             settings = DEFAULT_SETTINGS;

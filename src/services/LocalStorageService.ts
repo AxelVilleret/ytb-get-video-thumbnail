@@ -1,6 +1,12 @@
-export const localStorageService = {
-    persist: (key, value) => {
-        if (!key || !value) {
+interface LocalStorageService {
+    persist: (key: string, value: any) => void;
+    retrieve: (key: string) => any | null;
+    remove: (key: string) => void;
+}
+
+export const localStorageService: LocalStorageService = {
+    persist: (key: string, value: any): void => {
+        if (!key || value === undefined) {
             return;
         }
 
@@ -12,13 +18,13 @@ export const localStorageService = {
         }
     },
 
-    retrieve: (key) => {
+    retrieve: (key: string): any | null => {
         if (!key) {
             return null;
         }
 
         try {
-            const value = localStorage.getItem(key);  
+            const value = localStorage.getItem(key);
             return value ? JSON.parse(value) : null;
         } catch (error) {
             console.error(`Erreur lors de la récupération du localStorage : ${error}`);
@@ -26,7 +32,7 @@ export const localStorageService = {
         }
     },
 
-    remove: (key) => {
+    remove: (key: string): void => {
         if (!key) {
             return;
         }

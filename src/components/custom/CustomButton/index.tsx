@@ -6,6 +6,4 @@ const FilledButton = styled(Button)({
     color: 'white',
 });
 
-
-
 export { FilledButton };
