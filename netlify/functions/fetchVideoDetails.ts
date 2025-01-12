@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
 
-interface Event {
+export interface Event {
     body: string;
 }
 

@@ -1,9 +1,5 @@
 import fetch from 'node-fetch';
-import { YouTubeResponse } from './fetchVideoDetails';
-
-interface Event {
-    body: string;
-}
+import { Event, YouTubeResponse } from './fetchVideoDetails';
 
 export const handler = async function (event: Event) {
     const { channelId } = JSON.parse(event.body);
