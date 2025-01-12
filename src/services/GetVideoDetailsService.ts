@@ -1,3 +1,5 @@
+import { makePostRequest } from "../utils/requests";
+
 function wait(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -45,34 +47,28 @@ export interface VideoInfo {
 async function getVideoDetails(videoId: string): Promise<VideoInfo> {
     if (videoId === 'not found') throw new Error('Invalid video URL');
 
-    const apiKey = process.env.REACT_APP_API_KEY;
-    const videoDetails = await fetchVideoDetails(videoId, apiKey!);
-    const channelDetails = await fetchChannelDetails(videoDetails.snippet.channelId, apiKey!);
+    const videoDetails = await fetchVideoDetails(videoId);
+    const channelDetails = await fetchChannelDetails(videoDetails.snippet.channelId);
 
     const videoInfo = formatVideoDetails(videoDetails, channelDetails);
     return videoInfo;
 }
 
-async function fetchVideoDetails(videoId: string, apiKey: string): Promise<VideoDetails> {
+async function fetchVideoDetails(videoId: string): Promise<VideoDetails> {
     await wait(3000);
-    const url = `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&key=${apiKey}&part=snippet,contentDetails,statistics`;
-    const response = await fetch(url);
-    const data = await response.json();
+    const url = `/.netlify/functions/fetchVideoDetails`;
+    const data = await makePostRequest(url, { videoId });
 
-    if (!data.items || data.items.length === 0) {
-        throw new Error('Aucune vidéo trouvée avec cet ID !');
-    }
-
-    return data.items[0] as VideoDetails;
+    return data as VideoDetails;
 }
 
-async function fetchChannelDetails(channelId: string, apiKey: string): Promise<ChannelDetails> {
-    const url = `https://www.googleapis.com/youtube/v3/channels?id=${channelId}&key=${apiKey}&part=snippet`;
-    const response = await fetch(url);
-    const data = await response.json();
+async function fetchChannelDetails(channelId: string): Promise<ChannelDetails> {
+    const url = `/.netlify/functions/fetchChannelDetails`;
+    const data = await makePostRequest(url, { channelId });
 
-    return data.items[0] as ChannelDetails;
+    return data as ChannelDetails;
 }
+
 
 function formatVideoDetails(videoDetails: VideoDetails, channelDetails: ChannelDetails): VideoInfo {
     const thumbnailUrl = videoDetails.snippet.thumbnails.maxres.url;
