@@ -6,16 +6,16 @@ This project is a utility that allows you to retrieve the thumbnail of a YouTube
 ## Installation
 
 1. Clone this repository on your local machine.
-2. Make sure you have Node.js installed.
+2. Make sure you have Node.js and netlify-cli installed globally.
 3. Run the command `npm install` to install the dependencies.
 
 ## Usage
 
-Create a `.env` file at the root of the project and add the YouTube API key as an environment variable `REACT_APP_API_KEY`.
+Create a `.env` file at the root of the project by copying the `.env.example` file.
 
-```env
-YTB_API_KEY=YOUR_API_KEY
-```
+In your Netlify account, create a new site from Git and link it to your GitHub repository. In the site settings, go to the "Build & Deploy" section and add the following environment variables:
+
+- `YTB_API_KEY`: Your YouTube API key.
 
 To use this utility, you can run the following command:
 

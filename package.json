@@ -24,8 +24,10 @@
     "web-vitals": "^4.2.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "netlify dev",
+    "build": "netlify build",
+    "deploy": "netlify deploy --prod",
+    "netlify:init": "netlify init",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
